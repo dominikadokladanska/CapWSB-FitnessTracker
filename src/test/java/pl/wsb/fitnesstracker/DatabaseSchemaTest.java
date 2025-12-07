@@ -25,7 +25,7 @@ class DatabaseSchemaTest {
     @Test
     void shouldHaveEventTable() throws Exception {
         try (Connection conn = dataSource.getConnection()) {
-            assertThat(tableExists(conn, "events")).isTrue();
+            assertThat(tableExists(conn, "event")).isTrue();
         }
     }
 
@@ -67,14 +67,14 @@ class DatabaseSchemaTest {
     @Test
     void shouldHaveWorkoutSessionTable() throws Exception {
         try (Connection conn = dataSource.getConnection()) {
-            assertThat(tableExists(conn, "workout_sessions")).isTrue();
+            assertThat(tableExists(conn, "workout_session")).isTrue();
         }
     }
 
     @Test
     void eventTableHasExpectedColumns() throws Exception {
         try (Connection conn = dataSource.getConnection()) {
-            Set<String> cols = tableColumns(conn, "events");
+            Set<String> cols = tableColumns(conn, "event");
             assertThat(cols).contains("id", "start_time", "end_time", "city", "country", "description", "name");
         }
     }
@@ -123,7 +123,7 @@ class DatabaseSchemaTest {
     @Test
     void workoutSessionTableHasExpectedColumns() throws Exception {
         try (Connection conn = dataSource.getConnection()) {
-            Set<String> cols = tableColumns(conn, "workout_sessions");
+            Set<String> cols = tableColumns(conn, "workout_session");
             assertThat(cols).contains("id", "training_id", "altitude", "end_latitude", "end_longitude", "start_latitude", "start_longitude", "timestamp");
         }
     }
