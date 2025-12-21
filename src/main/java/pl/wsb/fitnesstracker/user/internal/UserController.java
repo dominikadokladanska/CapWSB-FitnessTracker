@@ -2,7 +2,9 @@ package pl.wsb.fitnesstracker.user.internal;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserDto;
+import pl.wsb.fitnesstracker.user.api.UserMapper;
 import pl.wsb.fitnesstracker.user.api.UserSimpleDto;
 
 import java.util.List;
@@ -55,6 +57,21 @@ class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto addUser(@RequestBody UserDto userDto) {
+        User userEntity = userMapper.toEntity(userDto);
+        User savedUser = userService.createUser(userEntity);
+        return userMapper.toDto(savedUser);
+    }
+
+    @PutMapping("/{userId}")
+    public UserDto updateUser(@PathVariable Long userId,
+                              @RequestBody UserDto userDto) {
+        User updated = userService.updateUser(userId, userDto);
+        return userMapper.toDto(updated);
     }
 }
 

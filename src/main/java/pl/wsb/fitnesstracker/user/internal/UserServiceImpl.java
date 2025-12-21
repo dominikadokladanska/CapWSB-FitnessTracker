@@ -2,9 +2,7 @@ package pl.wsb.fitnesstracker.user.internal;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.wsb.fitnesstracker.user.api.User;
-import pl.wsb.fitnesstracker.user.api.UserProvider;
-import pl.wsb.fitnesstracker.user.api.UserService;
+import pl.wsb.fitnesstracker.user.api.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +12,12 @@ import java.util.Optional;
 class UserServiceImpl implements UserService, UserProvider {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    UserServiceImpl(final UserRepository userRepository) {
+
+    UserServiceImpl(final UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -26,6 +27,16 @@ class UserServiceImpl implements UserService, UserProvider {
         }
         return userRepository.save(user);
     }
+
+    public User updateUser(Long id, UserDto userDto) {
+        var existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User with ID: " + id + " not found"));
+
+        userMapper.updateEntityFromDto(userDto, existingUser); // tu używamy user.setFirstName(dto.firstName());
+
+        return userRepository.save(existingUser);
+    }
+
 
     public void deleteUser(Long userId) {
         log.info("Deleted User {}", userId);
